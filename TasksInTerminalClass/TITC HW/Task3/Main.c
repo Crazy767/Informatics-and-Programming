@@ -1,57 +1,71 @@
-#define SIZE 10
 #include <stdio.h>
-#include <malloc.h>
-#include <stdlib.h>
-#include <time.h>
-
-/* Постановка задачи:
-* 1. Научиться создавать массивы
-* 2. Научиться заполнять массивы
-* 3. Реализовывать несколько простых функций над массивами
-* ---------Найти произведение нечетных элементов массива
-* ---------Найти произведение элементов массива с нечетными индексами
-* ---------Найти произведение элементов массива нечетных позначению
-* ---------Поменять элементы с заданными индексами
-* ---------Поменять местами правую и левую половины массива (ДЗ)
-*                  Пример[1 2 3 4 5 6 7 8] -> [5 6 7 8 1 2 3 4]
-*                  Реализовать двумя способами:
-*						1. С использованием доп массива
-*						2. Без доп массива
-*/
+#include <locale.h>
 
 int main()
 {
-	// Статический массив
-	int massive_1[10];//------ Плохо
+	setlocale(LC_ALL, "rus");
+	int n, k = 0, mass[] = { 5,6,7,8,1,2,3,4 }; // Сохранение элемента, счетчик и массив
+	float len = sizeof(mass) / sizeof(int); // Длина массива
+	// Без дополнительного массива
 
-	/*const int size = 10; ------- GOOD
-	int massive_2[size];*/
-
-	float massive_3[SIZE] = { 0 }; //------ GOOD
-
-	int massive_4[] = { 1,2,3,4,5 };
-
-	printf("%f", massive_3[0]);
-	// Динамический массив 
-	int* mass; //Указатель на начало целочисленного массива
-	int size;
-	printf("\nInput size of the array: ");
-	scanf_s("%d", &size);
-	mass = (int *)malloc(size * sizeof(int));
-
-	float* mass_f = (float *)malloc(size * sizeof(float));
-
-	int i;
-
-	for (i = 0; i < size; i++)
+	if ((int)len % 2 != 0)
 	{
-		mass[i] = 5;
+		int sr = len / 2 + 1; // Средний элеемнт
+		while (len != sr + k)
+		{
+			n = mass[k];
+			mass[k] = mass[(int)sr + k];
+			mass[(int)sr + k] = n;
+			k++;
+		}
+	}
+	else
+	{
+		int sr = len / 2; // Средний элеемнт
+		while (sr + k != len)
+		{
+			n = mass[k];
+			mass[k] = mass[sr + k];
+			mass[sr + k] = n;
+			k++;
+		}
+	}
+	printf("// Без дополнительного массива\n");
+	for (int i = 0; i != len; i++) // Вывод массива
+	{
+		printf("%d ", mass[i]);
 	}
 
-	//Очищение памяти
-	free(mass); 
-	free(mass_f);
+	// С дополнительным массивом
 
+	int* dop_mass = (int*)malloc((int)len * sizeof(int)); // Доп массив
+	k = 0;
+	free(dop_mass);
 
-	return 0;
+	if ((int)len % 2 != 0)
+	{
+		int sr = len / 2;
+		while (sr + k != len)
+		{
+			dop_mass[k] = mass[sr + k + 1];
+			dop_mass[(int)len - k] = mass[sr - k];
+			k++;
+		}
+		dop_mass[sr] = mass[sr];
+	}
+	else
+	{
+		int sr = len / 2;
+		while (sr + k - 1 != len)
+		{
+			dop_mass[k] = mass[sr + k];
+			dop_mass[(int)len - k] = mass[sr - k];
+			k++;
+		}
+	}
+	printf("\n// С дополнительным массивом\n");
+	for (int i = 0; i != len; i++) // Вывод массива
+	{
+		printf("%d ", dop_mass[i]);
+	}
 }
