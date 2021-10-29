@@ -1,3 +1,5 @@
+#define SIZE 6
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -5,28 +7,28 @@
 
 int main()
 {
-	setlocale(LC_ALL, "rus");
+	setlocale(LC_ALL, "");
 	srand(time(NULL));
-	int n,flag = 0 , number[6], number2[6], pop = 0, chislo1 = 0; //Длина числа, флажок, два массива разбитых чисел на цифры ИИ и User, попытки и рандомное число
+	int n, flag = 0 , number[SIZE], number2[SIZE], pop = 0, chislo1 = 0; //Длина числа, флажок, два массива разбитых чисел на цифры ИИ и User, попытки и рандомное число
 	printf("Какой длины будем отгадывать число (от 2 до 5): ");
 	scanf_s("%d", &n);
 	while (1)
 	{
 		if (n <= 5 && n >= 2)
 		{
-			int k = 0, s = 0;
+			int k = 0, s = 0; // Количество совпадений
 			while (k < n && flag != 1)
 			{
 				number[k] = rand() % 10; // Создание псевдорандомного числа с занесением цифр в массив
-				k++;
-				for (int kk = k - 1; kk >= 0; kk--)
+				if (number[0] != 0) // ПРОВЕРКА НА ПЕРВЫЙ 0
 				{
-					if (number[kk-1] != number[k - 1]) //Проверка числа на разные цифры
+					k++;
+					for (int kk = k - 1; kk >= 0; kk--)
 					{
-					}
-					else 
-					{
-						s++;
+						if (!(number[kk - 1] != number[k - 1])) //Проверка числа на разные цифры
+						{
+							s++;
+						}
 					}
 				}
 			}
@@ -39,7 +41,7 @@ int main()
 					//printf("%d", number[k]); // Получившееся рандомное число
 					chislo1 *= 10;
 					chislo1 += number[k];
-					}
+				}
 				int num;
 				printf("\nПробуем угадывать!\nВведите ваше число: ");
 				scanf_s("%d", &num);
@@ -49,25 +51,17 @@ int main()
 					ost = num % 10;
 					num /= 10;
 					knum++;
-					int kn = knum;
 					number2[knum] = ost; //Занесение цифр в массив
 				}
 				if (knum == n)
 				{
-					while (knum > 0)
-					{
-						knum--;
-					}
 					int i = n, ss = 0;
 					while (i > 0)
 					{
 						int j = n;
 						for (; j > 0; j--)
 						{
-							if (number2[i] != number2[j]) // Проверка введенного числа на разные цифры
-							{
-							}
-							else
+							if (!(number2[i] != number2[j])) // Проверка введенного числа на разные цифры
 							{
 								ss++;
 							}

@@ -1,14 +1,22 @@
 ﻿#define SIZE 10
 #include <stdio.h>
-#include <stdbool.h>
 #include <locale.h>
-#include <malloc.h>
 #include <time.h>
 #include <math.h>
+void spmenu()
+{
+	printf("\nВыберите операцию из списка (цифру)\
+		\n1. Сканировать товар \
+		\n2. Посмотреть инофрмацию о последнем товаре \
+		\n3. Добавить товар в чек \
+		\n4. Сформировать чек \
+		\n5. Рассчитать итоговую стоимость чека \
+		\n0. Вывести меню повторно\n");
+}
 
 int main()
 {
-	setlocale(LC_ALL, "rus");
+	setlocale(LC_ALL, "");
 	char product[SIZE][50] = 
 		{ {"Профнастил C20R (м2)"}, {"Планка торцевая 100x80 RAL (3м)"}, 
 		{"Саморез кровельный 8x35 мм (шт)"}, {"Гвозди строительные 3,5x90 (1,0 кг)"}, 
@@ -21,15 +29,9 @@ int main()
 	int storage[100] = { 0 };
 
 	printf("Магазин строительных материалов приветствует вас!\n");
-	printf("\nВыберите операцию из списка (цифру)\
-		\n1. Сканировать товар \
-		\n2. Посмотреть инофрмацию о последнем товаре \
-		\n3. Добавить товар в чек \
-		\n4. Сформировать чек \
-		\n5. Рассчитать итоговую стоимость чека \
-		\n0. Вывести меню повторно\n");
+	spmenu();
 	int menu, code, new = 0, save_code,i = 0;
-	do 
+	do
 	{
 		printf("\nВыберите цифру: ");
 		scanf_s("%d", &menu);
@@ -53,7 +55,7 @@ int main()
 			}break;
 		case 2:
 			i = 0;
-			printf("Отсканированный товар: \n");
+			printf("\nОтсканированный товар: \n");
 			printf("Штрихкод |\t\tНазвание\t\t    | Цена за шт. | Скидка\n");
 			while (save_code != barcode[i])
 			{
@@ -81,7 +83,7 @@ int main()
 				if (k > 0)
 				{
 					float sumproduct = (float)price[i] * k;
-					float resproduct = abs(((float)discount[i] / 100 - 1) * sumproduct); 
+					float resproduct = abs(((float)discount[i] / 100 - 1) * sumproduct);
 					sum += resproduct;
 					printf("%s\t  %d x %dр\n", product[i], k, price[i]);
 					printf("Стоимость ............... %.2fр\n", sumproduct);
@@ -120,6 +122,10 @@ int main()
 			printf("\nВсего .................... %.2fр\n", sum);
 			printf("Суммарная скидка .................... -%.2fр\n", sumdiscount);
 			printf("Итого .................... %.2fр\n", sum - sumdiscount);
+			break;
+		case 0:
+			spmenu();
+			break;
 		}
 	} while (menu != 5);
 }
