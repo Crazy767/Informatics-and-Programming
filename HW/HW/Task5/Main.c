@@ -8,11 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-/// <summary>
 /// функция, возвращающая размер файла
-/// </summary>
-/// <param name="file">полный или относительный путь до файла</param>
-/// <returns>размер файла</returns>
 int getFileSize(const char* file) {
     struct stat st;
     int full_size = 0;
@@ -29,11 +25,7 @@ int getFileSize(const char* file) {
             return -2;
     }
 }
-
-/// <summary>
-/// функция, печатающая названия файлов и размеры в каталоге и внутренних подкаталогов
-/// </summary>
-/// <param name="path">путь до каталога</param>
+//Узнаем сколько в каталоге файлов
 void getSizesFromDir(char* path, int* i) {
     struct dirent* cur_file;
     DIR* dir;
@@ -68,13 +60,12 @@ void getSizesFromDir(char* path, int* i) {
         closedir(dir);
     }
 }
-
+//Заполняем массивы названиями файлом и размер файла
 void GetMasDir(char* path, char** file_name, int* file_size, int n, int* save_n)
 {
     struct dirent* cur_file;
     DIR* dir;
     char full_file_path[200];
-
     char tmp[200];
 
     // открываем рабочую директорию
@@ -116,7 +107,6 @@ void GetMasDir(char* path, char** file_name, int* file_size, int n, int* save_n)
             }
         }
         // не забываем закрыть директорию
-        //printf("\n\t%s - %s == %d - %d", file_name[0], file_name[1], file_size[0], file_size[1]);
         n = *save_n;
         closedir(dir);
     }
@@ -136,16 +126,15 @@ void SortVstavka(char** file_name, int* file_size, int i)
     for (int j = 1; j < i; ++j)
     {
         int k = j;
-        while (k > 0 && file_size[k - 1] > file_size[k])
+        while (file_size[k - 1] > file_size[k])
         {
             int tmps = file_size[k - 1];
             file_size[k - 1] = file_size[k];
             file_size[k] = tmps;
 
-            int tmpn = file_name[k - 1];
+            char* tmpn = file_name[k - 1];
             file_name[k - 1] = file_name[k];
             file_name[k] = tmpn;
-
             k -= 1;
         }
     }
@@ -154,7 +143,8 @@ void SortVstavka(char** file_name, int* file_size, int i)
 void SortShell(char** file_name, int* file_size, int n)
 {
     int i, j, step;
-    int tmpn, tmps;
+    int tmps;
+    char* tmpn;
     for (step = n / 2; step > 0; step /= 2)
         for (i = step; i < n; i++)
         {
@@ -204,7 +194,7 @@ int main()
 {
     setlocale(LC_ALL, "");
     char path[200];
-    int i = 0, sort, s = 1, time, flag = 0, save_n = 0;
+    int i = 0, sort, s = 1, time, save_n = 0;
     // считываем путь (по сути scanf_s для строки)
     printf("Введите путь к каталогу: ");
     gets(path);
@@ -216,7 +206,7 @@ int main()
         char** file_name = (char**)malloc(i * sizeof(char*));
         for (int k = 0; k != i; k++)
         {
-            file_name[k] = (char*)malloc(i * 10 * sizeof(char));
+            file_name[k] = (char*)malloc(i* 2 * sizeof(char));
         }
 
         GetMasDir(path, file_name, file_size, save_n, &save_n);
@@ -253,11 +243,10 @@ int main()
                 SortCounting(file_name, file_size, i);
                 PrintMas(file_name, file_size, i);
                 time = clock() - time;
-                printf("\n%d (ms)\n", time);break;
+                printf("\n%d (ms)\n", time); break;
             }break;
         case 3:
             PrintMas(file_name, file_size, i);
-            free(file_name); free(file_size);
             break;
         case 0:
             s = 0;
