@@ -2,77 +2,111 @@
 #include <locale.h>
 #include <malloc.h>
 
+void print()
+{
+	printf("Что будем делать с массивом?\n"
+		"1. Найти произведение нечетных элементов массива\n"
+		"2. Найти произведение элементов массива с нечётными индексами\n"
+		"3. Найти произведение элементов массива нечётных по значению\n"
+		"4. Поменять местами элементы с заданными индексами\n"
+		"5. Поменять местами правую и левую половины массива\n"
+		"6. Вывести массивы\n"
+		"7. Вывести меню повторно\n"
+		"0. Закрыть программу\n");
+}
+
 int main()
 {
 	setlocale(LC_ALL, "rus");
-	int n, k = 0, mass[] = { 1,2,3,4,5,6,7,8 }; // Сохранение элемента, счетчик и массив
-	float len = sizeof(mass) / sizeof(int); // Длина массива
-	int r;
-	printf("Каким способ будем работать с массивом?\n1. Без доп. массива\n2. С доп.массивом\nВведите цифру: ");
-	scanf_s("%d", &r);
-
-	if (r == 1)
+	int* mass, *dop_mass, n1, n2, menu, size, tmp;
+	printf("Введите кол-во элементов массива: ");
+	scanf_s("%d", &size);
+	mass = (int*)malloc(size * sizeof(int));
+	dop_mass = (int*)malloc(size * sizeof(int));
+	printf("Введите элементы массива: ");
+	for (int i = 0; i < size; i++)
 	{
-		// Без дополнительного массива
-		if ((int)len % 2 != 0)
-		{
-			int sr = len / 2 + 1; // Средний элемент
-			while (len != sr + k)
-			{
-				n = mass[k];
-				mass[k] = mass[(int)sr + k];
-				mass[(int)sr + k] = n;
-				k++;
-			}
-		}
-		else
-		{
-			int sr = len / 2; // Средний элеемнт
-			while (sr + k != len)
-			{
-				n = mass[k];
-				mass[k] = mass[sr + k];
-				mass[sr + k] = n;
-				k++;
-			}
-		}
-		printf("\n// Без дополнительного массива\n");
-		for (int i = 0; i != len; i++) // Вывод массива
-		{
-			printf("%d ", mass[i]);
-		}
+		scanf_s("%d", &mass[i]);
+		dop_mass[i] = 0;
 	}
-	// С дополнительным массивом
-	else if (r == 2)
+	print();
+	do
 	{
-		int* dop_mass = (int*)malloc((int)len * sizeof(int)); // Доп массив
-		k = 0;
-		int sr = len / 2;
-		if ((int)len % 2 != 0)
+		int proiz = 1;
+		printf("Ввод: ");
+		scanf_s("%d", &menu);
+		switch (menu)
 		{
-
-			while (sr + k != len)
+		case 1:
+			for (int i = 0; i < size; i++)
 			{
-				dop_mass[k] = mass[sr + k + 1];
-				dop_mass[(int)len - k] = mass[sr - k];
-				k++;
+				if (mass[i] % 2 != 0)
+				{
+					proiz *= mass[i];
+				}
 			}
-			dop_mass[sr] = mass[sr];
-		}
-		else
-		{
-
-			while (sr + k - 1 != len)
+			printf("%d\n", proiz); break;
+		case 2:
+			for (int i = 0; i < size; i++)
 			{
-				dop_mass[k] = mass[sr + k];
-				dop_mass[(int)len - k] = mass[sr - k];
-				k++;
+				if (i % 2 != 0)
+				{
+					proiz *= mass[i];
+				}
 			}
+			printf("%d\n", proiz); break;
+		case 3:
+			for (int i = 0; i < size; i++)
+			{
+				if (mass[i] % 2 != 0)
+				{
+					proiz *= i;
+				}
+			}
+			printf("%d\n", proiz); break;
+		case 4:
+			printf("Введите 2 индекса: ");
+			scanf_s("%d %d", &n1, &n2);
+			tmp = mass[n1];
+			mass[n1] = mass[n2];
+			mass[n2] = tmp;
+			break;
+		case 5:
+			if (size % 2 == 0)
+			{
+				for (int i = 0; i < size / 2; i++)
+				{
+					dop_mass[size / 2 + i] = mass[i];
+				}
+			}
+			else
+			{
+				dop_mass[size / 2] = mass[size / 2];
+				for (int i = 0, j = size - 1; i < size / 2; i++, j--)
+				{
+					dop_mass[size / 2 + i + 1] = mass[i];
+					dop_mass[size - j - 1] = mass[j];
+				}
+			}break;
+		case 7:
+			print();
+			break;
+		case 6:
+			printf("Массив: ");
+			for (int i = 0; i < size; i++)
+			{
+				printf("%d ", mass[i]);
+			}
+			printf("\n");
+			printf("Доп. массив: ");
+			for (int i = 0; i < size; i++)
+			{
+				printf("%d ", dop_mass[i]);
+			}
+			printf("\n");
+			break;
+		default:
+			break;
 		}
-		printf("\n// С дополнительным массивом\n");
-		for (int i = 0; i != len; i++) // Вывод массива
-		{
-			printf("%d ", dop_mass[i]);
-		}
-	}
+	} while (menu != 0);
 }
